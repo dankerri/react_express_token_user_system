@@ -35,11 +35,16 @@ app.post('/login', (req, res)=>{
 	
 	*/
 
-	const user = {
-		id: 1,
-		username: 'danker',
-		email: 'itrrion@gmail.com'
+	function checkUser(username, password) {
+		var user = {
+			username: username,
+			password: password,
+			email: 'itrrion@gmail.com'
+		}
+
+		return user;
 	}
+	var user = checkUser(req.body.username, req.body.password);
 
 	jwt.sign(user, 'secretkey', (err, token)=> {
 		res.send({
