@@ -3,17 +3,19 @@ var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 
+//My package
+var db = require('./db.js');
+var checkUser = db.checkUser;
+var registerUser = db.registerUser;
+
+//Config
 var app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-	res.send({
-		message: 'welcome to the test'
-	});
-});
 
+//Router
 app.get('/protected', verifyToken, (req,res)=> {
 	jwt.verify(req.token, 'secretkey', (err, authData)=>{
 		if(err) {
@@ -25,42 +27,6 @@ app.get('/protected', verifyToken, (req,res)=> {
 			});
 		}
 	});
-});
-
-app.post('/login', (req, res)=>{
-	// I will add mysql check later, bodyParser can be used in here.
-	// req.body.name, req.body.password.
-	// Add database check here
-	/*
-	
-	*/
-
-	function checkUser(username, password) {
-		var user = {
-			username: username,
-			password: password,
-			email: 'itrrion@gmail.com'
-		}
-
-		return user;
-	}
-	var user = checkUser(req.body.username, req.body.password);
-
-	jwt.sign(user, 'secretkey', (err, token)=> {
-		res.send({
-			token
-		});
-	});
-
-	//just for test
-	console.log(
-		'Login: '+
-		req.body.username+
-		', '+
-		req.body.password+
-		','+
-		Date()
-	);
 });
 
 function verifyToken(req, res, next) {
@@ -78,6 +44,37 @@ function verifyToken(req, res, next) {
 	}
 }
 
+app.post('/login', (req, res)=>{
+	checkUser(req.body.username, req.body.password)
+	.then(result=>{
+		if ( result ) {
+			var user = {
+				username: req.body.username,
+				email: 'itrrion@gmail.com'
+			}
+			jwt.sign(user, 'secretkey', (err, token)=> {
+				res.send({
+					token
+				});
+			});
+		} else {
+			res.send({
+				message: 'username or password wrong'
+			});
+		}
+	})
+	.catch(e=>{
+		console.log(e);
+	});
+
+	console.log( req.body.username + ' login at ' + Date() );
+});
+
+app.get('/', (req, res) => {
+	res.send({
+		message: 'welcome to the test'
+	});
+});
 app.listen(3000, ()=>{
 	console.log('running on 3000');
 });
