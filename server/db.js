@@ -9,7 +9,7 @@ var pool = mysql.createPool({
 	database: 'user_system',
 });
 
-exports.checkUser = function checkUser(username, password) {
+exports.checkUser = function (username, password) {
 
 	const table = 'users';	
 	var sql = "SELECT * FROM `"+table+
@@ -25,7 +25,7 @@ exports.checkUser = function checkUser(username, password) {
 	return checkResult;
 }
 
-exports.registerUser = function registerUser() {
+exports.registerUser = function () {
 	return true;
 }
 

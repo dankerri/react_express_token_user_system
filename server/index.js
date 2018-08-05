@@ -50,6 +50,7 @@ app.post('/login', (req, res)=>{
 		if ( result ) {
 			var user = {
 				username: req.body.username,
+				password: req.body.password,
 				email: 'itrrion@gmail.com'
 			}
 			jwt.sign(user, 'secretkey', (err, token)=> {
@@ -57,17 +58,17 @@ app.post('/login', (req, res)=>{
 					token
 				});
 			});
+			console.log( req.body.username + ' login at ' + Date() );
 		} else {
 			res.send({
 				message: 'username or password wrong'
 			});
+			console.log('login request denied');
 		}
 	})
 	.catch(e=>{
 		console.log(e);
 	});
-
-	console.log( req.body.username + ' login at ' + Date() );
 });
 
 app.get('/', (req, res) => {
