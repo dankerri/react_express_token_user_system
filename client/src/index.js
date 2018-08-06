@@ -7,12 +7,15 @@ import registerServiceWorker from './registerServiceWorker';
 // my components
 import Login from './components/Login';
 import Protected from './components/Protected';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// <Route exact path="/protected" component={Protected} />
 
 ReactDOM.render(<Router>
 	<div>
 		<Route exact path="/" component={App} />
 		<Route exact path="/login" component={Login} />
-		<Route exact path="/protected" component={Protected} />
+		<ProtectedRoute path='/protected' component={Protected} />
 	</div>
 </Router>, document.getElementById('root'));
 registerServiceWorker();
